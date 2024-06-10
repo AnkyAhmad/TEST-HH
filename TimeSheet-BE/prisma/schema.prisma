@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRESQL_URL")
+}
+
+model Freelancers {
+  id_Freelancer       String                 @id @unique @default(uuid())
+  nama_karyawan       String                 @unique @db.VarChar(250)
+  tarif               Int
+  kegiatan_Freelancer kegiatan_Freelancers[]
+  createdAt           DateTime               @default(now())
+  updatedAt           DateTime               @updatedAt
+}
+
+model kegiatan_Freelancers {
+  id_kegiatan              String      @id @unique @default(uuid())
+  nama_karyawan            Freelancers @relation(fields: [freelancersId_Freelancer], references: [id_Freelancer])
+  judul_kegiatan           String      @db.VarChar(250)
+  nama_proyek              Proyeks     @relation(fields: [proyekId_proyek], references: [id_proyek])
+  tanggal_mulai            DateTime
+  tanggal_berakhir         DateTime
+  freelancersId_Freelancer String
+  proyekId_proyek          String
+  createdAt                DateTime    @default(now())
+  updatedAt                DateTime    @updatedAt
+}
+
+model Proyeks {
+  id_proyek           String                 @id @unique @default(uuid())
+  name_proyek         String                 @unique @db.VarChar(250)
+  kegiatan_Freelancer kegiatan_Freelancers[]
+  createdAt           DateTime               @default(now())
+  updatedAt           DateTime               @updatedAt
+}
